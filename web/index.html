@@ -1,0 +1,382 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Países y Provincias · paises_7A</title>
+    <style>
+      :root {
+        --bg: #eef2f7;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --primary: #1e3a8a;
+        --primary-hover: #1d4ed8;
+        --accent: #0f766e;
+        --danger: #b91c1c;
+        --danger-hover: #dc2626;
+        --text: #0f172a;
+        --muted: #64748b;
+        --border: #dbe3ee;
+        --radius: 14px;
+        --shadow:
+          0 10px 25px -5px rgba(15, 23, 42, 0.08),
+          0 4px 10px -6px rgba(15, 23, 42, 0.04);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 28px 18px 48px;
+        font-family:
+          'Segoe UI',
+          system-ui,
+          -apple-system,
+          Roboto,
+          sans-serif;
+        background: linear-gradient(180deg, #e2e8f0 0%, var(--bg) 220px);
+        color: var(--text);
+      }
+
+      .container {
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+
+      /* Encabezado */
+      .header {
+        background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
+        color: #ffffff;
+        padding: 24px 28px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .header h1 {
+        margin: 0 0 6px;
+        font-size: 1.65rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .header p {
+        margin: 0;
+        color: #cbd5e1;
+        font-size: 0.95rem;
+      }
+
+      #estado {
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        color: #f8fafc;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        backdrop-filter: blur(6px);
+      }
+
+      /* Grilla principal */
+      .grid {
+        display: grid;
+        grid-template-columns: 1.45fr 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+
+      @media (max-width: 860px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px;
+        box-shadow: var(--shadow);
+      }
+
+      .card-title {
+        margin: 0 0 16px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      /* Controles */
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+
+      input[type='text'],
+      input[type='search'] {
+        flex: 1;
+        min-width: 180px;
+        padding: 10px 13px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        color: var(--text);
+        background: var(--surface-soft);
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
+
+      input:focus {
+        outline: none;
+        background: #ffffff;
+        border-color: var(--primary-hover);
+        box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+      }
+
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.08s ease,
+          background-color 0.15s ease,
+          opacity 0.15s ease;
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      #btnAgregar,
+      #btnAgregarProvincia {
+        background: var(--primary-hover);
+        color: #ffffff;
+      }
+
+      #btnAgregar:hover:not(:disabled),
+      #btnAgregarProvincia:hover:not(:disabled) {
+        background: var(--primary);
+      }
+
+      /* Tabla */
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-top: 12px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+      }
+
+      thead th {
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 11px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+
+      tbody td {
+        padding: 9px 12px;
+        border-bottom: 1px solid #eef2f6;
+        vertical-align: middle;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      tbody tr:hover {
+        background: #f8fafc;
+      }
+
+      tbody td:first-child {
+        font-weight: 700;
+        color: var(--muted);
+        width: 58px;
+      }
+
+      tbody input[type='text'] {
+        width: 100%;
+        min-width: 120px;
+        padding: 7px 10px;
+        font-size: 0.9rem;
+        border-radius: 8px;
+      }
+
+      .acciones-celda {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .btn-prov {
+        background: #e0f2fe;
+        color: #0369a1;
+        padding: 6px 10px;
+        font-size: 0.82rem;
+      }
+
+      .btn-prov:hover {
+        background: #bae6fd;
+      }
+
+      .btn-save {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 6px 10px;
+        font-size: 0.82rem;
+      }
+
+      .btn-save:hover {
+        background: #bbf7d0;
+      }
+
+      .btn-del {
+        background: #fee2e2;
+        color: var(--danger);
+        padding: 6px 10px;
+        font-size: 0.82rem;
+      }
+
+      .btn-del:hover {
+        background: var(--danger-hover);
+        color: #ffffff;
+      }
+
+      /* Panel Master-Detail */
+      #masterTitulo {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.94rem;
+        margin-bottom: 14px;
+      }
+
+      #listaProvincias {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      #listaProvincias li {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 0.92rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div>
+          <h1>Gestión de Países y Provincias</h1>
+          <p>
+            Base de datos <strong>paises_7A</strong> · CRUD de países y vista
+            Master-Detail
+          </p>
+        </div>
+        <div id="estado">Iniciando...</div>
+      </header>
+
+      <main class="grid">
+        <section class="card">
+          <h2 class="card-title">Países (CRUD)</h2>
+
+          <div class="toolbar">
+            <input
+              id="nuevoPais"
+              type="text"
+              placeholder="Nuevo país (ej. Canadá)"
+            />
+            <button id="btnAgregar" type="button">+ Agregar</button>
+          </div>
+
+          <div class="toolbar">
+            <input
+              id="filtroPais"
+              type="search"
+              placeholder="Filtrar países por nombre..."
+            />
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Descripción</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaPaises"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="card">
+          <h2 class="card-title">Master-Detail · Provincias</h2>
+          <div id="masterTitulo">
+            Seleccioná <strong>Provincias</strong> en un país para ver su
+            detalle.
+          </div>
+
+          <div class="toolbar">
+            <input
+              id="nuevaProvincia"
+              type="text"
+              placeholder="Nueva provincia (ej. Córdoba)"
+              disabled
+            />
+            <button id="btnAgregarProvincia" type="button" disabled>
+              + Agregar
+            </button>
+          </div>
+
+          <ul id="listaProvincias"></ul>
+        </aside>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
